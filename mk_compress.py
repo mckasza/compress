@@ -8,7 +8,7 @@ __status__ = 'Development'
 
 import argparse
 
-from compress_utils import *
+from mk_compress_utils import *
 	
 def compress(data):
 
