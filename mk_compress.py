@@ -11,51 +11,32 @@ import argparse
 from mk_compress_utils import *
 	
 def compress(data):
+    
+    # The index of this loop indicates the position of the sliding window.  Everything before
+    # the index is already compressed and everything after is uncompressed.  
+    
+    comp_data = []
+    
+    i = 0
+    
+    while i < len(data):
+            
+        longest_start,longest_len = longestPrefix(data,i,12,9)
+        next_byte = (36).to_bytes(1,byteorder='big')
+            
+        if i+longest_len < len(data):
+            next_byte = data[i+longest_len]
+                
+        print(longest_start,longest_len,next_byte)
+        
+        comp_data.append(longest_start.to_bytes(1,byteorder='big'))
+        comp_data.append(longest_len.to_bytes(1,byteorder='big'))
+        comp_data.append(next_byte)
+        
+        i += longest_len+1
+            
+    return comp_data
 
-	# The index of this loop indicates the position of the sliding window.  Everything before
-	# the index is already compressed and everything after is uncompressed.  
-
-	comp_data = []
-	
-	i = 0
-	
-	while i < len(data):
-	
-		longest_start = i
-		longest_len = 0
-		
-		window_start = 0+(i > 12)*(i-12)
-		
-		for j in range(window_start,i):
-		
-			start = j
-			k = 0
-			
-			while j < len(data) and j < i+9:
-				
-				if data[start:j] == data[i:i+k]:
-					
-					if (j-start) > longest_len:
-						
-						longest_start = start
-						longest_len = j-start
-						
-				j += 1
-				k += 1
-		
-		next_byte = (36).to_bytes(1,byteorder='big')
-		
-		if i+longest_len < len(data):
-			next_byte = data[i+longest_len]
-
-		comp_data.append(abs(longest_start-i).to_bytes(1,byteorder='big'))
-		comp_data.append(longest_len.to_bytes(1,byteorder='big'))
-		comp_data.append(next_byte)
-	
-		i += longest_len+1
-		
-	return comp_data
-	
 def decompress(data):
 
 	decomp = []

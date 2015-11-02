@@ -44,3 +44,43 @@ def listToFile(filename,data):
 	for byte in data:
 		f_output.write(byte)
 	f_output.close()
+	
+def lengthOfCommonSubseq(seq1,seq2):
+    
+    i = 0
+    while i < len(seq1) and i < len(seq2):
+        if not seq1[i] == seq2[i]:
+            break
+        i += 1
+        
+    return i
+        
+	
+def longestPrefix(data,pos,win_size,pv_size):
+    
+    start = 0+(pos > win_size)*(pos - win_size)
+    
+    if pos+pv_size < len(data):
+        end = pos+pv_size
+    else:
+        end = len(data)
+        
+    longest_start = start
+    longest_len = 0
+    
+    i = start
+    while i < pos:
+        lcs = lengthOfCommonSubseq(data[i:end],data[pos:end])
+        
+        if lcs > longest_len:
+            longest_len = lcs
+            longest_start = abs(pos-i)
+        
+        i += 1
+        
+    return longest_start,longest_len
+                
+        
+        
+        
+    
